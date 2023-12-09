@@ -1,0 +1,57 @@
+﻿@page "/editdata/{index:int}"
+@using Resume.Data
+@inject WeatherForecastService WFS
+@inject IJSRuntime JS
+
+@if (Index < WFS.WeatherForecasts.Length)
+{
+    <h3>Data[@Index]</h3>
+    <EditForm Model="@editModel">
+        <table>
+            <tr>
+                <td>Date:</td>
+                <td><InputDate id="date" @bind-Value="editModel.Date" /></td>
+            </tr>
+            <tr>
+                <td>Temp. (C):</td>
+                <td><InputNumber id="temperature" @bind-Value="editModel.TemperatureC" /></td>
+            </tr>
+            <tr>
+                <td>Temp. (F):</td>
+                <td>@editModel.TemperatureF</td>
+            </tr>
+            <tr>
+                <td>Summary:</td>
+                <td><InputText id="summary" @bind-Value="editModel.Summary" /></td>
+            </tr>
+        </table>
+        <button class="btn btn-primary" onclick="history.back()">Cancel</button>
+        <button class="btn btn-primary" @onclick="SaveData">Save</button>
+    </EditForm>
+}
+@code {
+    [Parameter]
+    public int Index { get; set; }
+    private WeatherForecast editModel;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Index < WFS.WeatherForecasts.Length)
+        {
+            var data = WFS.WeatherForecasts[Index];
+            editModel = new WeatherForecast
+            {
+                Date = data.Date,
+                TemperatureC = data.TemperatureC,
+                Summary = data.Summary
+            };
+        }
+    }
+
+    private async Task SaveData()
+    {
+        WFS.WeatherForecasts[Index] = editModel;
+        await JS.InvokeVoidAsync("history.back");
+    }
+}

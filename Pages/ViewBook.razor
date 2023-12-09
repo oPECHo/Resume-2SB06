@@ -1,0 +1,30 @@
+﻿@page "/bookviewdata/{index:int}"
+@using Resume.Data;
+@inject BookService BS
+
+@if (Index < BS.Books.Length)
+{
+    <h3>Data[@Index]</h3>
+    <table>
+        <tr><td>Title:</td><td>@book.Title</td></tr>
+        <tr><td>Author:</td><td>@book.Author</td></tr>
+        <tr><td>Description:</td><td>@book.Description</td></tr>
+        <tr><td>Publication Year:</td><td>@book.PublicationYear</td></tr>
+        <tr><td>Price:</td><td>@book.Price</td></tr>
+    </table>
+}
+else
+{
+    <p>Index out of range (@BS.Books.Length).</p>
+}
+@code {
+    [Parameter]
+    public int Index { get; set; }
+    private Book book { get; set; }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Index < BS.Books.Length)
+            book = BS.Books[Index];
+    }
+}

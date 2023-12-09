@@ -1,0 +1,56 @@
+﻿@page "/bookdata"
+
+@using Resume.Data
+@inject BookService BookService
+
+<div class="container mt-5">
+    <h1>Book List</h1>
+
+    <p>This component demonstrates fetching book data from a service.</p>
+
+    @if (books == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Description</th>
+                        <th>Publication Year</th>
+                        <th>Price</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < books.Length; i++)
+                    {
+                        var book = books[i];
+                        <tr>
+                            <td><a href="/bookviewdata/@i">@book.Title</a></td>
+                            <td>@book.Author</td>
+                            <td>@book.Description</td>
+                            <td>@book.PublicationYear</td>
+                            <td>@book.Price</td>
+                            <td><button type="button" class="btn btn-warning" onclick="window.location.href='/editdatabook/@i'"><i class="oi oi-pencil"></i></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@code {
+    private Book[] books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await BookService.GetBooksAsync();
+    }
+}

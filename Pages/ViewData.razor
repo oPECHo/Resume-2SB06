@@ -1,0 +1,29 @@
+﻿@page "/viewdata/{index:int}"
+@using Resume.Data;
+@inject WeatherForecastService WFS
+
+@if (Index < WFS.WeatherForecasts.Length)
+{
+    <h3>Data[@Index]</h3>
+    <table>
+        <tr><td>Date:</td><td>@weather.Date</td></tr>
+        <tr><td>Temp. (C)</td><td>@weather.TemperatureC</td></tr>
+        <tr><td>Temp. (F)</td><td>@weather.TemperatureF</td></tr>
+        <tr><td>Summary:</td><td>@weather.Summary</td></tr>
+    </table>
+}
+else
+{
+    <p>Index out of range (@WFS.WeatherForecasts.Length).</p>
+}
+@code {
+    [Parameter]
+    public int Index { get; set; }
+    private WeatherForecast weather { get; set; }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Index < WFS.WeatherForecasts.Length)
+            weather = WFS.WeatherForecasts[Index];
+    }
+}
